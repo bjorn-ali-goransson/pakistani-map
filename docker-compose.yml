@@ -1,4 +1,5 @@
 # without this line, vscode wont show the "Run All Services" button
+name: pakistani-map
 services:
   app:
     build:
