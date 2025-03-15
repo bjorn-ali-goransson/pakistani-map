@@ -38,12 +38,12 @@ RUN composer install --no-scripts --no-autoloader
 COPY src/ .
 
 # Generate optimized autoload files
-# RUN composer dump-autoload --optimize
+RUN composer dump-autoload --optimize
 
 # Set permissions
-# RUN chown -R www-data:www-data /var/www/html \
-#     && chmod -R 755 /var/www/html/storage \
-#     && chmod -R 755 /var/www/html/bootstrap/cache
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html/storage \
+    && chmod -R 755 /var/www/html/bootstrap/cache
 
 # Configure Apache
 COPY docker/apache/000-default.conf /etc/apache2/sites-available/000-default.conf
