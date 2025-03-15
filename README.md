@@ -1,46 +1,51 @@
-# PHP Development Environment
+# Laravel Docker Project
 
-This is a PHP development environment set up using VS Code Dev Containers.
+This is a Laravel project configured with Docker for easy development and deployment.
 
 ## Prerequisites
 
-- Docker Desktop
-- Visual Studio Code
-- Remote - Containers extension for VS Code
+- Docker
+- Docker Compose
 
-## Getting Started
+## Setup Instructions
 
-You can start the environment in two ways:
+1. Clone this repository
+2. Build the Docker containers:
+   ```bash
+   docker-compose build
+   ```
+3. Start the containers:
+   ```bash
+   docker-compose up -d
+   ```
+4. Install Laravel dependencies:
+   ```bash
+   docker-compose exec app composer install
+   ```
+5. Generate application key:
+   ```bash
+   docker-compose exec app php artisan key:generate
+   ```
+6. Set proper permissions:
+   ```bash
+   docker-compose exec app chown -R www-data:www-data storage bootstrap/cache
+   ```
 
-### Using VS Code Dev Containers (Recommended for Development)
-1. Open this project in VS Code
-2. When prompted, click "Reopen in Container"
-3. Wait for the container to build and start
-4. The PHP development environment will be ready to use
+The application should now be running at `http://localhost:80`
 
-### Using Docker Compose
-1. Open a terminal in the project directory
-2. Run `docker-compose up -d`
-3. The application will be available at http://localhost:8080
-4. To stop the container, run `docker-compose down`
+## Directory Structure
 
-## Project Structure
-
-- `public/` - Contains the web-accessible files
-  - `index.php` - Main entry point
-- `src/` - Contains PHP source code
-- `.devcontainer/` - Contains Dev Container configuration
-- `docker-compose.yml` - Docker Compose configuration
-
-## Accessing the Application
-
-Once the container is running, you can access the application at:
-http://localhost:8080
+- `src/` - Contains the Laravel application
+- `docker/` - Contains Docker-related configuration files
+- `Dockerfile` - Main Docker configuration for PHP/Apache
 
 ## Development
 
-The container includes:
-- PHP 8.2 with Apache
-- Composer for dependency management
-- Common PHP extensions
-- VS Code extensions for PHP development 
+- To run artisan commands:
+  ```bash
+  docker-compose exec app php artisan [command]
+  ```
+- To access the container shell:
+  ```bash
+  docker-compose exec app bash
+  ``` 
