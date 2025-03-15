@@ -14,7 +14,7 @@ services:
     environment:
       - PHP_MEMORY_LIMIT=2G
       - XDEBUG_MODE=debug
-      - XDEBUG_CONFIG=client_host=host.docker.internal
+      - XDEBUG_CONFIG=client_host=localhost
       - LOG_CHANNEL=stderr
     volumes:
       - ~/.ssh:/root/.ssh:ro
@@ -29,7 +29,14 @@ services:
       - laravel-network
     depends_on:
       - db
-    command: bash -c "chmod -R 777 /var/www/html/storage /var/www/html/bootstrap/cache && echo 'ServerName 127.0.0.1' >> /etc/apache2/apache2.conf && apache2-foreground"
+    # 1: this is because we mount the source code, and has a different owner, and will be written to by laravel templates cache engine
+    # 2: this is to silence apache warning
+    # 3: this is the actual command to start apache
+    command: bash -c "
+        chmod -R 777 /var/www/html/storage /var/www/html/bootstrap/cache &&
+        echo 'ServerName 127.0.0.1' >> /etc/apache2/apache2.conf &&
+        apache2-foreground 
+      "
 
   db:
     image: postgres:15
