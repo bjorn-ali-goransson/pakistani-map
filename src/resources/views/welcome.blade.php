@@ -74,11 +74,14 @@
             border-radius: 12px;
             border: 1px solid var(--border-color);
             backdrop-filter: blur(8px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15), 
+                       0 4px 10px rgba(0, 0, 0, 0.1);
         }
 
         .leaflet-popup-tip {
             background: var(--bg-overlay);
             border: 1px solid var(--border-color);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
         }
 
         .leaflet-popup-content {
@@ -128,10 +131,12 @@
             position: 'topright'
         }).addTo(map);
 
-        // Add modern map tiles from Stadia Maps
-        L.tileLayer('https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png', {
+        // Add monochrome map style with high contrast
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+            subdomains: 'abcd',
             maxZoom: 20,
-            attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a>, &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors'
+            className: 'map-tiles'
         }).addTo(map);
 
         // Add a marker for Riyadh city center
