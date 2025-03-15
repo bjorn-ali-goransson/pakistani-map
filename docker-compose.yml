@@ -27,7 +27,7 @@ services:
       - laravel-network
     depends_on:
       - db
-    command: bash -c "chmod -R 777 /var/www/html/storage /var/www/html/bootstrap/cache && apache2-foreground"
+    command: bash -c "chmod -R 777 /var/www/html/storage /var/www/html/bootstrap/cache && echo 'ServerName 127.0.0.1' >> /etc/apache2/apache2.conf && apache2-foreground"
 
   db:
     image: postgres:15
@@ -56,7 +56,6 @@ configs:
     content: |
       <VirtualHost *:80>
           ServerAdmin webmaster@localhost
-          ServerName localhost
           DocumentRoot /var/www/html/public
 
           <Directory /var/www/html/public>
