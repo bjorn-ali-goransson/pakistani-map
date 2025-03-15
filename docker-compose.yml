@@ -1,4 +1,4 @@
-
+# without this line, vscode wont show the "Run All Services" button
 services:
   app:
     build:
@@ -17,6 +17,9 @@ services:
     volumes:
       - ~/.ssh:/root/.ssh:ro
       - ./src:/var/www/html
+    configs:
+      - source: apache_vhost
+        target: /etc/apache2/sites-available/000-default.conf
     ports:
       - "80:80"
     networks:
@@ -45,4 +48,21 @@ networks:
     driver: bridge
 
 volumes:
-  postgres_data: 
+  postgres_data:
+
+configs:
+  apache_vhost:
+    content: |
+      <VirtualHost *:80>
+          ServerAdmin webmaster@localhost
+          DocumentRoot /var/www/html/public
+
+          <Directory /var/www/html/public>
+              Options Indexes FollowSymLinks
+              AllowOverride All
+              Require all granted
+          </Directory>
+
+          ErrorLog ${APACHE_LOG_DIR}/error.log
+          CustomLog ${APACHE_LOG_DIR}/access.log combined
+      </VirtualHost> 
