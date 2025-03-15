@@ -14,7 +14,11 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install zip \
     && apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Clear cache
+ARG WITH_GIT=false
+
+RUN if [ "${WITH_GIT}" = "true" ]; then \
+    apt-get update && apt-get install -y git && apt-get clean && rm -rf /var/lib/apt/lists/*; \
+fi
 
 # Install PHP extensions required for Laravel with PostgreSQL
 RUN docker-php-ext-install pdo_pgsql pgsql mbstring exif pcntl bcmath gd
@@ -27,6 +31,16 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Set working directory
 WORKDIR /var/www/html
+
+ARG WITH_XDEBUG=false
+
+RUN if [ "${WITH_XDEBUG}" = "true" ]; then \
+    pecl install xdebug && \
+    docker-php-ext-enable xdebug && \
+    echo "xdebug.mode=debug" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && \
+    echo "xdebug.client_host=host.docker.internal" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini && \
+    echo "xdebug.start_with_request=yes" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini; \
+fi
 
 # Copy composer files first to leverage Docker cache
 COPY src/composer.json ./
@@ -46,7 +60,7 @@ RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html/bootstrap/cache
 
 # Configure Apache
-COPY docker/apache/000-default.conf /etc/apache2/sites-available/000-default.conf
+# COPY docker/apache/000-default.conf /etc/apache2/sites-available/000-default.conf
 
 EXPOSE 80
 

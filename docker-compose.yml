@@ -1,22 +1,29 @@
-version: '3.8'
 
 services:
   app:
     build:
       context: .
       dockerfile: Dockerfile
+      args:
+        - WITH_XDEBUG=true
+        - WITH_GIT=true
     container_name: laravel-app
     restart: unless-stopped
     working_dir: /var/www/html
+    environment:
+      - PHP_MEMORY_LIMIT=2G
+      - XDEBUG_MODE=debug
+      - XDEBUG_CONFIG=client_host=host.docker.internal
     volumes:
+      - ~/.ssh:/root/.ssh:ro
       - ./src:/var/www/html
-    command: bash -c "chmod -R 777 /var/www/html/storage /var/www/html/bootstrap/cache && apache2-foreground"
     ports:
       - "80:80"
     networks:
       - laravel-network
     depends_on:
       - db
+    command: bash -c "chmod -R 777 /var/www/html/storage /var/www/html/bootstrap/cache && apache2-foreground"
 
   db:
     image: postgres:15
