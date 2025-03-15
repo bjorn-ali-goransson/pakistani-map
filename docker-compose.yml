@@ -10,6 +10,7 @@ services:
     working_dir: /var/www/html
     volumes:
       - ./src:/var/www/html
+    command: bash -c "chmod -R 777 /var/www/html/storage /var/www/html/bootstrap/cache && apache2-foreground"
     ports:
       - "80:80"
     networks:
